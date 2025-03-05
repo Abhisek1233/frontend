@@ -46,31 +46,31 @@ function App() {
     setIsLoading(true);
     setError('');
     setOutput('');
-  
+
     try {
       // Submit code
-      const response = await fetch('https://your-backend-url/submit', {
+      const response = await fetch('https://backend-9j9q.onrender.com/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, language: selectedLanguage.value, input }),
       });
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-  
+
       const { token } = await response.json();
-  
+
       // Poll for result
       const pollResult = async () => {
         try {
-          const resultResponse = await fetch(`https://your-backend-url/result/${token}`);
+          const resultResponse = await fetch(`https://backend-9j9q.onrender.com/result/${token}`);
           if (!resultResponse.ok) {
             throw new Error(`HTTP error! Status: ${resultResponse.status}`);
           }
-  
+
           const result = await resultResponse.json();
-  
+
           if (result.status === 'processing') {
             setTimeout(pollResult, 2000); // Poll again after 2 seconds
           } else {
@@ -83,7 +83,7 @@ function App() {
           setIsLoading(false);
         }
       };
-  
+
       pollResult();
     } catch (error) {
       console.error('Submission error:', error);
@@ -91,7 +91,7 @@ function App() {
       setIsLoading(false);
     }
   };
-  
+
   return (
     <div className="app-container">
       <header className="header">
