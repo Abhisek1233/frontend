@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import CodeEditor from './components/Editor';
 import LanguageSelector from './components/LanguageSelector';
 import './App.css';
@@ -18,7 +18,7 @@ const defaultCode = {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
     }
-}`,
+  }`,
   cpp: `#include <iostream>
 using namespace std;
 
@@ -41,62 +41,57 @@ function App() {
   const [output, setOutput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const ws = useRef(null);
 
-  useEffect(() => {
-    // Set default code when language changes
-    setCode(defaultCode[selectedLanguage.value]);
-  }, [selectedLanguage]);
-
-  // WebSocket connection
-  useEffect(() => {
-    ws.current = new WebSocket('wss://backend-9j9q.onrender.com');
-
-    ws.current.onopen = () => {
-      console.log('WebSocket connected');
-      setError('');
-    };
-
-    ws.current.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.error) {
-        setError(data.error);
-      } else {
-        setOutput(prev => prev + (data.output || ''));
-      }
-      setIsLoading(false);
-    };
-
-    ws.current.onerror = (error) => {
-      setError('WebSocket connection error');
-      console.error('WebSocket error:', error);
-    };
-
-    ws.current.onclose = () => {
-      if (!error) setError('Connection closed unexpectedly');
-      setIsLoading(false);
-    };
-
-    return () => ws.current?.close();
-  }, []);
-
-  const handleRun = () => {
-    if (!ws.current || ws.current.readyState !== WebSocket.OPEN) {
-      setError('WebSocket connection not established');
-      return;
-    }
-
+  const handleRun = async () => {
+    setIsLoading(true);
     setError('');
     setOutput('');
-    setIsLoading(true);
-    
-    ws.current.send(JSON.stringify({
-      code,
-      language: selectedLanguage.value,
-      input
-    }));
+  
+    try {
+      // Submit code
+      const response = await fetch('https://your-backend-url/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, language: selectedLanguage.value, input }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const { token } = await response.json();
+  
+      // Poll for result
+      const pollResult = async () => {
+        try {
+          const resultResponse = await fetch(`https://your-backend-url/result/${token}`);
+          if (!resultResponse.ok) {
+            throw new Error(`HTTP error! Status: ${resultResponse.status}`);
+          }
+  
+          const result = await resultResponse.json();
+  
+          if (result.status === 'processing') {
+            setTimeout(pollResult, 2000); // Poll again after 2 seconds
+          } else {
+            setOutput(result.output);
+            setIsLoading(false);
+          }
+        } catch (error) {
+          console.error('Polling error:', error);
+          setError('Failed to fetch result');
+          setIsLoading(false);
+        }
+      };
+  
+      pollResult();
+    } catch (error) {
+      console.error('Submission error:', error);
+      setError('Failed to run code');
+      setIsLoading(false);
+    }
   };
-
+  
   return (
     <div className="app-container">
       <header className="header">
