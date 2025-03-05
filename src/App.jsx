@@ -50,7 +50,7 @@ function App() {
 
   // WebSocket connection
   useEffect(() => {
-    ws.current = new WebSocket('wss://railway.com/railway.schema.json');
+    ws.current = new WebSocket('wss://backend-9j9q.onrender.com');
 
     ws.current.onopen = () => {
       console.log('WebSocket connected');
