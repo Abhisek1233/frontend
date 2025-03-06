@@ -42,6 +42,11 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+   useEffect(() => {
+    // Set default code when language changes
+    setCode(defaultCode[selectedLanguage.value]);
+  }, [selectedLanguage]);
+
   const handleRun = async () => {
     setIsLoading(true);
     setError('');
