@@ -1,0 +1,438 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Dark theme variables */
+.dark-theme {
+  --bg-primary: #1e1e1e;
+  --bg-secondary: #252526;
+  --bg-tertiary: #2d2d2d;
+  --border-color: #3c3c3c;
+  --text-primary: #e0e0e0; /*#ffffff */
+  --text-secondary: #a0a0a0;
+  --header-bg: #206bb6;
+  --header-text: #180202;
+  --run-button-bg: #27ae60;
+  --run-button-hover: #2ecc71;
+  --run-button-disabled: #3a3a3a;
+  --run-button-loading: #3498db;
+  --error-color: #e74c3c;
+  --error-bg: rgba(231, 76, 60, 0.1);
+  --error-border: #5a2d2a;
+  --resize-handle: #333;
+  --resize-handle-hover: #999;
+  --file-tab-bg: #2d2d2d;
+  --file-tab-border: #3c3c3c;
+  --theme-toggle-bg: #2d2d2d;
+  --theme-toggle-color: #ffffff;
+}
+
+/* Light theme variables */
+.light-theme {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e8e8e8;
+  --border-color: #d0d0d0;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --header-bg: #4a6fa5;
+  --header-text: #ffffff;
+  --run-button-bg: #4caf50;
+  --run-button-hover: #45a049;
+  --run-button-disabled: #cccccc;
+  --run-button-loading: #2196f3;
+  --error-color: #f44336;
+  --error-bg: rgba(244, 67, 54, 0.1);
+  --error-border: #ffcdd2;
+  --resize-handle: #e0e0e0;
+  --resize-handle-hover: #bdbdbd;
+  --file-tab-bg: #f0f0f0;
+  --file-tab-border: #d0d0d0;
+  --theme-toggle-bg: #f0f0f0;
+  --theme-toggle-color: #333333;
+}
+
+/* Theme transitions */
+.app-container, .header, .file-tab-container, .file-tab, 
+.input-textarea, .output-display, .resize-handle, .theme-toggle,
+.run-button {
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+/* App container */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Header styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--header-bg);
+  color: var(--header-text);
+  z-index: 10;
+}
+
+.logo-container h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  background-color: var(--theme-toggle-bg);
+  color: var(--theme-toggle-color);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle:hover {
+  background-color: var(--theme-toggle-color);
+  color: var(--theme-toggle-bg);
+}
+
+/* Run button styles */
+.run-button {
+  padding: 0.4rem 1.25rem;
+  background-color: var(--run-button-bg);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.run-button:hover {
+  background-color: var(--run-button-hover);
+}
+
+.run-button:disabled {
+  background-color: var(--run-button-disabled);
+  cursor: not-allowed;
+}
+
+.run-button.loading {
+  background-color: var(--run-button-loading);
+}
+
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* File tab styles */
+.file-tab-container {
+  background-color: var(--bg-secondary);
+  padding: 0.25rem 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+  z-index: 5;
+}
+
+.file-tab {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background-color: var(--file-tab-bg);
+  border: 1px solid var(--file-tab-border);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.file-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.edit-icon {
+  opacity: 0.5;
+  font-size: 0.8rem;
+  transition: opacity 0.2s;
+}
+
+.file-name:hover .edit-icon {
+  opacity: 1;
+}
+
+.file-name-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--run-button-loading);
+  outline: none;
+  font-size: 0.85rem;
+  padding: 0.2rem 0;
+  width: 100%;
+  color: var(--text-primary);
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Editor container */
+.editor-container {
+  flex: 1;
+  overflow: hidden;
+  min-height: 0; /* Important for flexbox to work properly */
+}
+
+/* Resize handle for IO panel */
+.resize-handle {
+  height: 6px;
+  background-color: var(--resize-handle);
+  cursor: ns-resize;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.resize-handle::after {
+  content: "";
+  width: 30px;
+  height: 2px;
+  background-color: var(--resize-handle-hover);
+  border-radius: 1px;
+}
+
+.resize-handle:hover::after {
+  background-color: var(--text-secondary);
+}
+
+/* IO container */
+.io-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--bg-secondary);
+  overflow: hidden;
+}
+
+.input-section, .output-section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.input-section h3, .output-section h3 {
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.input-textarea {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  resize: none;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.input-textarea:focus {
+  border-color: var(--run-button-loading);
+}
+
+.output-display {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow: auto;
+  white-space: pre-wrap;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.output-display.error {
+  color: var(--error-color);
+  border-color: var(--error-border);
+  background-color: var(--error-bg);
+}
+
+/* Language selector styles */
+.language-selector {
+  position: relative;
+  min-width: 150px;
+  color:black !important;
+}
+
+.language-selector select {
+  appearance: none;
+  width: 100%;
+  padding: 0.4rem 0.75rem;
+  padding-right: 2rem;
+  background-color: var(--bg-tertiary);
+  color: black !important;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  outline: none;
+  
+}
+
+.language-selector::after {
+  content: "▼";
+  font-size: 0.8rem;
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-secondary);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+  
+  .controls {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .io-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  
+  .input-section, .output-section {
+    height: auto;
+  }
+  
+  .language-selector {
+    min-width: 120px;
+  }
+}
+
+/* Make sure the editor is visible in all themes */
+.cm-editor {
+  height: 100%;
+  width: 100%;
+}
+
+/* Optional: Customize the scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Toast notifications */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 16px;
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-left: 4px solid var(--run-button-bg);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: slide-in 0.3s ease-out forwards;
+}
+
+.toast.error {
+  border-left-color: var(--error-color);
+}
+
+@keyframes slide-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Animations for transitions */
+.app-container {
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
