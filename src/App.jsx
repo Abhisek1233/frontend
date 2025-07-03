@@ -182,7 +182,7 @@ function App() {
     <div className={`app-container ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <header className="header">
         <div className="logo-container">
-          <h1>Abhisek Code Runner</h1>
+          <h1>Runzy</h1>
         </div>
         <div className="controls">
           <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
